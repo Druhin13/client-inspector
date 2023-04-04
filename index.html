@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test Window Dimensions | DRUH.IN</title>
+	<style>
+		body {
+			background-color: yellow;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			margin: 0;
+		}
+
+		h1 {
+			font-size: 3rem;
+			color: black;
+			text-align: center;
+			margin: 0;
+		}
+	</style>
+</head>
+<body>
+	<h1 id="dimensions"></h1>
+
+	<script>
+		function displayWindowDimensions() {
+			// Get the window dimensions
+			const windowWidth = window.innerWidth;
+			const windowHeight = window.innerHeight;
+
+			// Set the dimensions in the h1 element
+			const dimensionsH1 = document.getElementById("dimensions");
+			dimensionsH1.textContent = windowWidth + " x " + windowHeight;
+		}
+
+		// Display the window dimensions on load
+		displayWindowDimensions();
+
+		// Re-display the window dimensions every time the window is resized
+		window.addEventListener("resize", displayWindowDimensions);
+	</script>
+</body>
+</html>
