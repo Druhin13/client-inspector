@@ -21,7 +21,7 @@
 		}
 
 		h1 {
-			font-size: 4rem;
+			font-size: 1.5rem;
 			color: #131313;
 			text-align: center;
 			margin: 0;
@@ -32,21 +32,45 @@
 	<h1 id="dimensions"></h1>
 
 	<script>
-		function displayWindowDimensions() {
-			// Get the window dimensions
-			const windowWidth = window.innerWidth;
-			const windowHeight = window.innerHeight;
+		function displayBrowserDetails() {
+			// Get the browser details
+			const browser = navigator.userAgent;
+			const os = navigator.platform;
+			const screenResolution = window.screen.width + " × " + window.screen.height;
+			const colorDepth = window.screen.colorDepth;
+			const availableScreenSpace = window.screen.availWidth + " × " + window.screen.availHeight;
+			const language = navigator.language;
 
-			// Set the dimensions in the h1 element
+			// Create <p> elements for each data point
+			const browserP = document.createElement("p");
+			browserP.textContent = "Browser: " + browser;
+			const osP = document.createElement("p");
+			osP.textContent = "OS: " + os;
+			const resolutionP = document.createElement("p");
+			resolutionP.textContent = "Screen Resolution: " + screenResolution;
+			const colorDepthP = document.createElement("p");
+			colorDepthP.textContent = "Color Depth: " + colorDepth;
+			const availableSpaceP = document.createElement("p");
+			availableSpaceP.textContent = "Available Screen Space: " + availableScreenSpace;
+			const languageP = document.createElement("p");
+			languageP.textContent = "Browser Language: " + language;
+
+			// Append the <p> elements to the <h1> element
 			const dimensionsH1 = document.getElementById("dimensions");
-			dimensionsH1.textContent = windowWidth + " × " + windowHeight;
+			dimensionsH1.innerHTML = "";
+			dimensionsH1.appendChild(browserP);
+			dimensionsH1.appendChild(osP);
+			dimensionsH1.appendChild(resolutionP);
+			dimensionsH1.appendChild(colorDepthP);
+			dimensionsH1.appendChild(availableSpaceP);
+			dimensionsH1.appendChild(languageP);
 		}
 
-		// Display the window dimensions on load
-		displayWindowDimensions();
+		// Display the browser details on load
+		displayBrowserDetails();
 
-		// Re-display the window dimensions every time the window is resized
-		window.addEventListener("resize", displayWindowDimensions);
+		// Re-display the browser details every time the window is resized
+		window.addEventListener("resize", displayBrowserDetails);
 	</script>
 </body>
 </html>
