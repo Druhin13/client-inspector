@@ -9,6 +9,8 @@
     <meta name="keywords" content="client, inspector, data, management, reports" />
     <meta name="author" content="Your Name Here" />
     <meta property="og:image" content="https://druh.in/client-inspector/client-inspector_og.webp">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+
     <title>Client Inspector</title>
     <style>
         @font-face {
@@ -33,12 +35,81 @@
             color: #131313;
             text-align: center;
             margin: 0;
+            width: 50vw;
+            /* line-height: 95%; */
+        }
+
+        #screenshotButton {
+            position: absolute;
+            top: 2.5vh;
+            right: 10.5vh;
+            background-color: #FFC130;
+            border: none;
+            /* border-radius: 2.5rem; */
+            width: 6.5vh;
+            height: 6.5vh;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #screenshotButton svg {
+            width: 100%;
+            height: 100%;
+            fill: #FFC130;
+            border-radius: 0.5rem;
+        }
+
+        #downloadButton {
+            position: absolute;
+            top: 2.5vh;
+            right: 2.5vh;
+            background-color: #FFC130;
+            border: none;
+            /* border-radius: 2.5rem; */
+            width: 6.5vh;
+            height: 6.5vh;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #downloadButton svg {
+            width: 100%;
+            height: 100%;
+            fill: #FFC130;
+            border-radius: 0.5rem;
         }
     </style>
 </head>
 
-<body>
+<body id="targetElement">
     <h1 id="dimensions"></h1>
+    <!-- <button id="screenshotButton">Take Screenshot</button> -->
+    <div id="screenshotButton">
+        <svg width="74" height="74" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Your SVG path elements here -->
+            <rect width="74" height="74" fill="white" fill-opacity="0.2" />
+            <path
+                d="M44.4153 24.2813H32.8875C32.1208 24.2813 31.3856 24.5858 30.8435 25.1279C30.3014 25.67 29.9968 26.4052 29.9968 27.1719V42.9547C29.9968 43.7213 30.3014 44.4566 30.8435 44.9987C31.3856 45.5408 32.1208 45.8453 32.8875 45.8453H44.4153C45.1819 45.8453 45.9171 45.5408 46.4592 44.9987C47.0013 44.4566 47.3059 43.7213 47.3059 42.9547V27.1488C47.2998 26.3861 46.9925 25.6568 46.4511 25.1197C45.9097 24.5826 45.1779 24.2812 44.4153 24.2813ZM45.5715 42.9547C45.5715 43.2613 45.4497 43.5554 45.2329 43.7723C45.016 43.9891 44.7219 44.1109 44.4153 44.1109H32.8875C32.5808 44.1109 32.2867 43.9891 32.0699 43.7723C31.853 43.5554 31.7312 43.2613 31.7312 42.9547V27.1488C31.7312 26.8421 31.853 26.548 32.0699 26.3312C32.2867 26.1143 32.5808 25.9925 32.8875 25.9925H44.4153C44.7219 25.9925 45.016 26.1143 45.2329 26.3312C45.4497 26.548 45.5715 26.8421 45.5715 27.1488V42.9547Z"
+                fill="black" />
+            <path
+                d="M41.0795 47.4061H29.5806C29.2739 47.4061 28.9798 47.2843 28.763 47.0674C28.5461 46.8506 28.4243 46.5565 28.4243 46.2498V30.4844C28.4243 30.2544 28.333 30.0338 28.1703 29.8712C28.0077 29.7086 27.7871 29.6172 27.5571 29.6172C27.3271 29.6172 27.1066 29.7086 26.9439 29.8712C26.7813 30.0338 26.6899 30.2544 26.6899 30.4844V46.2556C26.6899 47.0223 26.9945 47.7575 27.5366 48.2996C28.0787 48.8417 28.8139 49.1462 29.5806 49.1462H41.0795C41.3102 49.1462 41.5315 49.0546 41.6947 48.8914C41.8579 48.7282 41.9496 48.5069 41.9496 48.2762C41.9496 48.0454 41.8579 47.8241 41.6947 47.6609C41.5315 47.4978 41.3102 47.4061 41.0795 47.4061Z"
+                fill="black" />
+        </svg>
+    </div>
+    <div id="downloadButton">
+        <svg width="74" height="74" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Your SVG path elements here -->
+            <rect width="74" height="74" fill="white" fill-opacity="0.2" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M36.2209 25.7772C36.2209 25.3482 36.5683 25 36.9981 25C37.4279 25 37.7753 25.3482 37.7753 25.7772V42.495L42.7021 37.7315C43.0106 37.4331 43.5026 37.4416 43.801 37.7502C44.0995 38.0587 44.0909 38.5507 43.7832 38.8491L37.5375 44.8842C37.5171 44.904 37.4933 44.9172 37.4694 44.9305C37.4559 44.9379 37.4424 44.9454 37.4295 44.9541C37.4185 44.9618 37.4078 44.9698 37.3972 44.9778C37.3638 45.0028 37.3306 45.0276 37.2911 45.0435C37.1971 45.0816 37.0976 45.1026 36.9973 45.1026C36.8971 45.1026 36.7976 45.0824 36.7035 45.0435C36.6589 45.0255 36.6212 44.9972 36.5833 44.9687C36.5737 44.9615 36.5641 44.9542 36.5543 44.9471C36.5418 44.9381 36.5284 44.9308 36.515 44.9234C36.4951 44.9126 36.4751 44.9017 36.4579 44.885L36.4486 44.8764L36.4471 44.8749L30.2115 38.8507C29.9029 38.5522 29.8944 38.0603 30.1928 37.7517C30.4905 37.4432 30.984 37.4346 31.291 37.7331L36.2209 42.495V25.7772ZM25.3401 44.326C25.3401 43.897 25.6875 43.5488 26.1173 43.5488C26.5471 43.5488 26.8945 43.897 26.8945 44.326V48.3155H47.102V44.326C47.102 43.897 47.4494 43.5488 47.8792 43.5488C48.309 43.5488 48.6564 43.897 48.6564 44.326V49.0927C48.6564 49.5217 48.309 49.8699 47.8792 49.8699H26.1173C25.6875 49.8699 25.3401 49.5217 25.3401 49.0927V44.326Z"
+                fill="#231F20" />
+        </svg>
+    </div>
+    <img id="screenshotImage" style="display: none;">
 
     <script>
         function displayBrowserDetails() {
@@ -50,6 +121,7 @@
             const colorDepth = window.screen.colorDepth;
             const availableScreenSpace = window.screen.availWidth + " × " + window.screen.availHeight;
             const language = navigator.language;
+
 
             // Create <p> elements for each data point
             const browserP = document.createElement("p");
@@ -66,6 +138,8 @@
             availableSpaceP.textContent = "Available Screen Space: " + availableScreenSpace;
             const languageP = document.createElement("p");
             languageP.textContent = "Browser Language: " + language;
+
+
 
             // Append the <p> elements to the <h1> element
             const dimensionsH1 = document.getElementById("dimensions");
@@ -84,6 +158,54 @@
 
         // Re-display the browser details every time the window is resized
         window.addEventListener("resize", displayBrowserDetails);
+
+
+
+
+        //copy mechanism
+        document.getElementById('screenshotButton').addEventListener('click', function () {
+            const targetElement = document.getElementById('targetElement');
+
+            // Use html2canvas to capture the content of the target element
+            html2canvas(targetElement).then(function (canvas) {
+                // Convert the canvas content to an image Blob
+                canvas.toBlob(function (blob) {
+                    // Create a ClipboardItem with the Blob
+                    const clipboardItem = new ClipboardItem({
+                        'image/png': blob
+                    });
+
+                    // Copy the ClipboardItem to the clipboard
+                    navigator.clipboard.write([clipboardItem]).then(function () {
+                        alert('Screenshot image copied to clipboard!');
+                    }).catch(function (error) {
+                        console.error('Failed to copy image to clipboard:', error);
+                    });
+                });
+            });
+        });
+
+        //download mechanism
+        document.getElementById('downloadButton').addEventListener('click', function () {
+            const targetElement = document.getElementById('targetElement');
+
+            // Use html2canvas to capture the content of the target element
+            html2canvas(targetElement).then(function (canvas) {
+                // Convert the canvas content to an image Blob
+                canvas.toBlob(function (blob) {
+                    // Create a temporary anchor element
+                    const tempAnchor = document.createElement('a');
+                    tempAnchor.href = URL.createObjectURL(blob);
+                    tempAnchor.download = 'screenshot.png';
+
+                    // Simulate a click on the anchor element to trigger the download
+                    tempAnchor.click();
+
+                    // Clean up
+                    URL.revokeObjectURL(tempAnchor.href);
+                });
+            });
+        });
     </script>
 </body>
 
