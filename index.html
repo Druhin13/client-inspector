@@ -177,7 +177,7 @@
 
                     // Copy the ClipboardItem to the clipboard
                     navigator.clipboard.write([clipboardItem]).then(function () {
-                        alert('Screenshot image copied to clipboard!');
+                        alert('Copied to clipboard!');
                     }).catch(function (error) {
                         console.error('Failed to copy image to clipboard:', error);
                     });
@@ -196,7 +196,7 @@
                     // Create a temporary anchor element
                     const tempAnchor = document.createElement('a');
                     tempAnchor.href = URL.createObjectURL(blob);
-                    tempAnchor.download = 'screenshot.png';
+                    tempAnchor.download = 'scecs-sheet.png';
 
                     // Simulate a click on the anchor element to trigger the download
                     tempAnchor.click();
